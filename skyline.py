@@ -57,9 +57,17 @@ class SkylineSort:
                 self.skyline_objs.append(obj)
     def __init__(
         self, unsorted_objects : list, 
-        skyline_params : str, 
-        operators : SkylineType
+        skyline_params : list[str], 
+        operators : list[SkylineType]
         ) -> None:
+        if len(skyline_params) < 2:
+            raise RuntimeError("Must perform skyline on at least 2 parameters")
+        if len(operators) < 2:
+            raise RuntimeError("Must perform skyline with at least 2 operators")
+        if len(operators) != len(skyline_params):
+            raise RuntimeError("Number of parameters and number of skyline types must be equal.")
+        
+
         self.unsorted_objects = unsorted_objects
         self.skyline_getters = [attrgetter(param) for param in skyline_params]
         self.skyline_types = operators
@@ -94,7 +102,7 @@ if __name__ == '__main__':
         for i in range(0,num_persons):
             people.append(Person(str(i), random.randint(0,100), random.randint(0,100), random.randint(0,100), random.randint(0,100), random.randint(0,100), random.randint(0,100)))
         start = time.time_ns()
-        skyline = SkylineSort(people, ["age", "score", "random_val1", "random_val2", "random_val3", "random_val4"], [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE])
+        skyline = SkylineSort(people, ["age", "score", "random_val1", "random_val2", "random_val3", "random_val4"], [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE])
         end = time.time_ns()
         duration = (end - start) / (10 ** 9)
         times.append(duration)
