@@ -84,25 +84,5 @@ if __name__ == '__main__':
         times.append(duration)
         print(f'Iteration {t}/{num_tests} skyline sort on {num_persons}: {duration} seconds.')
     print(f'\n\nAverage Time on {num_persons} elements: {sum(times) / num_tests} seconds')
-    # [print(x.name) for x in skyline.skyline_objs]
-
-
-    # x_values = [obj.age for obj in people]
-    # y_values = [obj.score for obj in people]
-
-    # plt.figure(figsize=(8,6))
-    # plt.scatter(x_values, y_values)
-    # for i in range(0, len(people)):
-    #     plt.annotate(people[i].name, (people[i].age, people[i].score))
-
-
-    # x_line = []
-    # y_line = []
-    # skyline_objs = skyline.skyline_objs
-    # skyline_objs.sort(key=attrgetter('age'))
-    # for skyline_obj in skyline_objs:
-    #     x_line.append(skyline_obj.age)
-    #     y_line.append(skyline_obj.score)
-    # plt.plot(x_line, y_line, color='blue', linestyle='--')
-    # plt.show()
+    
     
