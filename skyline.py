@@ -42,7 +42,7 @@ class SkylineSort:
         return True
     
     def sort_skyline(self):
-        for obj in self.unsorted_objects:
+        for obj in self.sorted_objects:
             if self.dominates(obj, self.skyline_type_1, self.skyline_type_2):
                 self.skyline_objs.append(obj)
     def __init__(
@@ -57,6 +57,8 @@ class SkylineSort:
         self.skyline_getter_2 = attrgetter(skyline_param_2)
         self.skyline_type_1 = operator_1
         self.skyline_type_2 = operator_2
+        self.unsorted_objects.sort(key=self.skyline_getter_1, reverse= (self.skyline_type_1 == SkylineType.MAXSKYLINE))
+        self.sorted_objects = self.unsorted_objects
 
         self.sort_skyline()
 
@@ -66,23 +68,27 @@ class Person:
         self.age = age 
         self.score = score
 
+def dprint(input : str):
+    print(input)
+    open(f'./sys_log.log', '+a').write(input + '\n')
+
 if __name__ == '__main__':
     import random 
     import time
 
     num_tests       = 0xFF
-    num_persons     = 0xFFFFF
+    num_persons     = 0xFF
     times = []
     for t in range(0, num_tests):
         people = []
         for i in range(0,num_persons):
             people.append(Person(str(i), random.randint(0,100), random.randint(0,100)))
         start = time.time_ns()
-        skyline = SkylineSort(people, "age", SkylineType.MINSKYLINE, "score", SkylineType.MAXSKYLINE)
+        skyline = SkylineSort(people, "age", SkylineType.MAXSKYLINE, "score", SkylineType.MAXSKYLINE)
         end = time.time_ns()
         duration = (end - start) / (10 ** 9)
         times.append(duration)
         print(f'Iteration {t}/{num_tests} skyline sort on {num_persons}: {duration} seconds.')
-    print(f'\n\nAverage Time on {num_persons} elements: {sum(times) / num_tests} seconds')
+    dprint(f'Average Time on {num_persons} elements: {sum(times) / num_tests} seconds - {time.time()}')
     
     
