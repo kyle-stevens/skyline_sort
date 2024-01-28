@@ -67,31 +67,42 @@ class Person:
         self.score = score
 
 if __name__ == '__main__':
-    import random
-    people = []
-    for i in range(0,0xFF):
-        people.append(Person(str(i), random.randint(0,100), random.randint(0,100)))
-    
-    skyline = SkylineSort(people, "age", SkylineType.MINSKYLINE, "score", SkylineType.MAXSKYLINE)
-    [print(x.name) for x in skyline.skyline_objs]
+    import random 
+    import time
+
+    num_tests       = 0xFF
+    num_persons     = 0xFFFFF
+    times = []
+    for t in range(0, num_tests):
+        people = []
+        for i in range(0,num_persons):
+            people.append(Person(str(i), random.randint(0,100), random.randint(0,100)))
+        start = time.time_ns()
+        skyline = SkylineSort(people, "age", SkylineType.MINSKYLINE, "score", SkylineType.MAXSKYLINE)
+        end = time.time_ns()
+        duration = (end - start) / (10 ** 9)
+        times.append(duration)
+        print(f'Iteration {t}/{num_tests} skyline sort on {num_persons}: {duration} seconds.')
+    print(f'\n\nAverage Time on {num_persons} elements: {sum(times) / num_tests} seconds')
+    # [print(x.name) for x in skyline.skyline_objs]
 
 
-    x_values = [obj.age for obj in people]
-    y_values = [obj.score for obj in people]
+    # x_values = [obj.age for obj in people]
+    # y_values = [obj.score for obj in people]
 
-    plt.figure(figsize=(8,6))
-    plt.scatter(x_values, y_values)
-    for i in range(0, len(people)):
-        plt.annotate(people[i].name, (people[i].age, people[i].score))
+    # plt.figure(figsize=(8,6))
+    # plt.scatter(x_values, y_values)
+    # for i in range(0, len(people)):
+    #     plt.annotate(people[i].name, (people[i].age, people[i].score))
 
 
-    x_line = []
-    y_line = []
-    skyline_objs = skyline.skyline_objs
-    skyline_objs.sort(key=attrgetter('age'))
-    for skyline_obj in skyline_objs:
-        x_line.append(skyline_obj.age)
-        y_line.append(skyline_obj.score)
-    plt.plot(x_line, y_line, color='blue', linestyle='--')
-    plt.show()
+    # x_line = []
+    # y_line = []
+    # skyline_objs = skyline.skyline_objs
+    # skyline_objs.sort(key=attrgetter('age'))
+    # for skyline_obj in skyline_objs:
+    #     x_line.append(skyline_obj.age)
+    #     y_line.append(skyline_obj.score)
+    # plt.plot(x_line, y_line, color='blue', linestyle='--')
+    # plt.show()
     
