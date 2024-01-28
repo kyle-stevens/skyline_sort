@@ -19,21 +19,37 @@ class SkylineSort:
         for obj in self.unsorted_objects:
             if obj == object:
                 continue
-            if (self.skyline_getter_1(obj) <= self.skyline_getter_1(object) and \
-                self.skyline_getter_2(obj) <= self.skyline_getter_2(object)):
-                if (self.skyline_getter_1(obj) < self.skyline_getter_1(object) or \
-                    self.skyline_getter_2(obj) < self.skyline_getter_2(object)):
-                    return False
+            if not (
+                (
+                    self.skyline_getter_1(obj) <= self.skyline_getter_1(object) and \
+                    self.skyline_getter_2(obj) <= self.skyline_getter_2(object)
+                ) and \
+                (
+                    self.skyline_getter_1(obj) < self.skyline_getter_1(object) or \
+                    self.skyline_getter_2(obj) < self.skyline_getter_2(object)
+                )
+                ):
+                continue
+            else:
+                return False
         return True
     def dominates_max(self, object):
         for obj in self.unsorted_objects:
             if obj == object:
                 continue
-            if (self.skyline_getter_1(obj) >= self.skyline_getter_1(object) and \
-                self.skyline_getter_2(obj) >= self.skyline_getter_2(object)):
-                if (self.skyline_getter_1(obj) > self.skyline_getter_1(object) or \
-                    self.skyline_getter_2(obj) > self.skyline_getter_2(object)):
-                    return False
+            if not (
+                (
+                    self.skyline_getter_1(obj) >= self.skyline_getter_1(object) and \
+                    self.skyline_getter_2(obj) >= self.skyline_getter_2(object)
+                ) and \
+                (
+                    self.skyline_getter_1(obj) > self.skyline_getter_1(object) or \
+                    self.skyline_getter_2(obj) > self.skyline_getter_2(object)
+                )
+                ):
+                continue
+            else:
+                return False
         return True
     def sort_skyline(self):
         for obj in self.unsorted_objects:
@@ -65,11 +81,12 @@ class Person:
         self.score = score
 
 if __name__ == '__main__':
-    people = [Person("Alice", 25,30),Person("Bob", 28,40),Person("Charlie", 26,25),
-              Person("David", 45,59),Person("Edgar", 65,16),Person("Francine", 25,60),
-              Person("Gordon", 15,98),Person("Harriet", 92,30),Person("Isobel", 25,30)]
+    import random
+    people = []
+    for i in range(0,0xFF):
+        people.append(Person(str(i), random.randint(0,100), random.randint(0,100)))
     
-    skyline = SkylineSort(people, "age", "score", SkylineType.MINSKYLINE)
+    skyline = SkylineSort(people, "age", "score", SkylineType.MAXSKYLINE)
     [print(x.name) for x in skyline.skyline_objs]
 
 
