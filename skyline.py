@@ -1,4 +1,4 @@
-from operator import attrgetter
+from operator import attrgetter, lt, gt, le, ge
 
 from enum import Enum
 
@@ -11,66 +11,52 @@ class SkylineType(Enum):
 class SkylineSort:
 
     unsorted_objects : list = None
-    skyline_param_1 : str
-    skyline_param_2 : str
+    skyline_getter_1 : str
+    skyline_getter_2 : str
+    skyline_type_1 : SkylineType
+    skyline_type_2 : SkylineType
     skyline_objs : list = []
 
-    def dominates_min(self, object):
+    def dominates(self, object, operator_1, operator_2):
+        comp_1 = lt if operator_1 == SkylineType.MINSKYLINE else gt
+        comp_1_ = le if operator_1 == SkylineType.MINSKYLINE else ge
+        comp_2 = lt if operator_2 == SkylineType.MINSKYLINE else gt
+        comp_2_ = le if operator_2 == SkylineType.MINSKYLINE else ge
+        
         for obj in self.unsorted_objects:
             if obj == object:
                 continue
             if not (
                 (
-                    self.skyline_getter_1(obj) <= self.skyline_getter_1(object) and \
-                    self.skyline_getter_2(obj) <= self.skyline_getter_2(object)
+                    comp_1_(self.skyline_getter_1(obj), self.skyline_getter_1(object)) and \
+                    comp_2_(self.skyline_getter_2(obj), self.skyline_getter_2(object))
                 ) and \
                 (
-                    self.skyline_getter_1(obj) < self.skyline_getter_1(object) or \
-                    self.skyline_getter_2(obj) < self.skyline_getter_2(object)
+                    comp_1(self.skyline_getter_1(obj), self.skyline_getter_1(object)) or \
+                    comp_2(self.skyline_getter_2(obj), self.skyline_getter_2(object))
                 )
                 ):
                 continue
             else:
                 return False
         return True
-    def dominates_max(self, object):
-        for obj in self.unsorted_objects:
-            if obj == object:
-                continue
-            if not (
-                (
-                    self.skyline_getter_1(obj) >= self.skyline_getter_1(object) and \
-                    self.skyline_getter_2(obj) >= self.skyline_getter_2(object)
-                ) and \
-                (
-                    self.skyline_getter_1(obj) > self.skyline_getter_1(object) or \
-                    self.skyline_getter_2(obj) > self.skyline_getter_2(object)
-                )
-                ):
-                continue
-            else:
-                return False
-        return True
+    
     def sort_skyline(self):
         for obj in self.unsorted_objects:
-            if (self.skyline_type == SkylineType.MAXSKYLINE):
-                if self.dominates_max(obj):
-                    self.skyline_objs.append(obj)
-            elif (self.skyline_type == SkylineType.MINSKYLINE):
-                if self.dominates_min(obj):
-                    self.skyline_objs.append(obj)
+            if self.dominates(obj, self.skyline_type_1, self.skyline_type_2):
+                self.skyline_objs.append(obj)
     def __init__(
         self, unsorted_objects : list, 
         skyline_param_1 : str, 
+        operator_1 : SkylineType,
         skyline_param_2 : str,
-        operator : SkylineType
+        operator_2 : SkylineType
         ) -> None:
         self.unsorted_objects = unsorted_objects
-        self.skyline_param_1 = skyline_param_1
-        self.skyline_getter_1 = attrgetter(self.skyline_param_1)
-        self.skyline_param_2 = skyline_param_2
-        self.skyline_getter_2 = attrgetter(self.skyline_param_2)
-        self.skyline_type = operator
+        self.skyline_getter_1 = attrgetter(skyline_param_1)
+        self.skyline_getter_2 = attrgetter(skyline_param_2)
+        self.skyline_type_1 = operator_1
+        self.skyline_type_2 = operator_2
 
         self.sort_skyline()
 
@@ -86,7 +72,7 @@ if __name__ == '__main__':
     for i in range(0,0xFF):
         people.append(Person(str(i), random.randint(0,100), random.randint(0,100)))
     
-    skyline = SkylineSort(people, "age", "score", SkylineType.MAXSKYLINE)
+    skyline = SkylineSort(people, "age", SkylineType.MINSKYLINE, "score", SkylineType.MAXSKYLINE)
     [print(x.name) for x in skyline.skyline_objs]
 
 
