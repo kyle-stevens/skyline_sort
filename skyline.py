@@ -19,6 +19,31 @@ class SkylineSort:
 
     def dominates(self, object, operators):
         global iterations
+        if len(operators):
+            comp_1 = lt if operators[0] == SkylineType.MINSKYLINE else gt
+            comp_1_ = le if operators[0] == SkylineType.MINSKYLINE else ge
+            comp_2 = lt if operators[1] == SkylineType.MINSKYLINE else gt
+            comp_2_ = le if operators[1] == SkylineType.MINSKYLINE else ge
+            
+            for obj in self.unsorted_objects:
+                iterations += 1
+                if obj == object:
+                    continue
+                if not (
+                    (
+                        comp_1_(self.skyline_getters[0](obj), self.skyline_getters[0](object)) and \
+                        comp_2_(self.skyline_getters[1](obj), self.skyline_getters[1](object))
+                    ) and \
+                    (
+                        comp_1(self.skyline_getters[0](obj), self.skyline_getters[0](object)) or \
+                        comp_2(self.skyline_getters[1](obj), self.skyline_getters[1](object))
+                    )
+                    ):
+                    continue
+                else:
+                    return False
+            return True
+        # Use less efficient version when you pass the 2 variable threshhold.
         as_good_as_checks = []
         better_than_checks = []
         for operator in operators:
@@ -46,40 +71,9 @@ class SkylineSort:
                 return False
         return True
     
-    def dominates_dual_variate(self, object, operator_1, operator_2):
-        global iterations
-        comp_1 = lt if operator_1 == SkylineType.MINSKYLINE else gt
-        comp_1_ = le if operator_1 == SkylineType.MINSKYLINE else ge
-        comp_2 = lt if operator_2 == SkylineType.MINSKYLINE else gt
-        comp_2_ = le if operator_2 == SkylineType.MINSKYLINE else ge
-        
-        for obj in self.unsorted_objects:
-            iterations += 1
-            if obj == object:
-                continue
-            if not (
-                (
-                    comp_1_(self.skyline_getters[0](obj), self.skyline_getters[0](object)) and \
-                    comp_2_(self.skyline_getters[1](obj), self.skyline_getters[1](object))
-                ) and \
-                (
-                    comp_1(self.skyline_getters[0](obj), self.skyline_getters[0](object)) or \
-                    comp_2(self.skyline_getters[1](obj), self.skyline_getters[1](object))
-                )
-                ):
-                continue
-            else:
-                return False
-        return True
-    
-    def sort_skyline_multi_variate(self):
+    def sort_skyline(self):
         for obj in self.skyline_candidates:
             if self.dominates(obj, self.skyline_types):
-                self.skyline_objs.append(obj)
-    
-    def sort_skyline_dual_variate(self):
-        for obj in self.skyline_candidates:
-            if self.dominates_dual_variate(obj, self.skyline_types[0], self.skyline_types[1]):
                 self.skyline_objs.append(obj)
 
     def __init__(
@@ -103,10 +97,7 @@ class SkylineSort:
             self.unsorted_objects.sort(key=self.skyline_getters[0], reverse= (self.skyline_types[0] == SkylineType.MAXSKYLINE))
         self.skyline_candidates = self.unsorted_objects
 
-        if len(operators) == 2: # Use more efficient two variable algorithm
-            self.sort_skyline_dual_variate()
-        else:
-            self.sort_skyline_multi_variate()
+        self.sort_skyline()
 
 class Person:
     def __init__(self, name, age, score, rand1, rand2, rand3, rand4) -> None:
@@ -126,12 +117,12 @@ if __name__ == '__main__':
     import random 
     import time
 
-    num_tests       = 0xFF
-    num_persons     = 0xFF
+    num_tests       = 0xFFFF
+    num_persons     = 0xFFF
     times = []
     total_iterations = []
-    skyline_params_test = ["age", "score", "random_val1"] #, "random_val2", "random_val3", "random_val4"]
-    skyline_operators_test = [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE] #, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE]
+    skyline_params_test = ["age", "score", "random_val1", "random_val2", "random_val3", "random_val4"]
+    skyline_operators_test = [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE]
     for t in range(0, num_tests):
         iterations = 0
         people = []
@@ -148,7 +139,7 @@ if __name__ == '__main__':
         duration = (end - start) / (10 ** 9)
         times.append(duration)
         total_iterations.append(iterations)
-        print(f'Iteration {t}/{num_tests} skyline sort on {num_persons}: {duration} seconds. Took {iterations} iterations to complete.')
-    dprint(f'Average Time on {num_persons} elements with {len(skyline_params_test)} parameters: {sum(times) / num_tests} seconds - {time.time()}. Average Iterations: {sum(total_iterations) / len(total_iterations)}')
+        print(f'Iteration {t:10}/{num_tests} skyline sort on {num_persons:10}: {duration:15} seconds. Took {iterations:10} iterations to complete.')
+    dprint(f'Average Time on {num_persons:10} elements with {len(skyline_params_test):10} parameters: {(sum(times) / num_tests):15} seconds - {time.time()}. Average Iterations: {sum(total_iterations) / len(total_iterations)}')
     
     
