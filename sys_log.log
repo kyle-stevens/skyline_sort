@@ -34,3 +34,10 @@ Average Time on 255 elements: 0.0016574486274509798 seconds - 1706485469.325127
 Average Time on 255 elements: 0.012422207058823527 seconds - 1706485562.3848708
 Average Time on 255 elements: 0.012787343529411766 seconds - 1706485657.548702
 Average Time on 255 elements: 0.039164838039215694 seconds - 1706485750.8918505
+Average Time on 255 elements: 0.10063096352941178 seconds - 1706630052.9338953
+Average Time on 255 elements: 0.1101405509803922 seconds - 1706630267.2561698
+Average Time on 255 elements: 0.10918818431372546 seconds - 1706630306.5345361
+Average Time on 255 elements: 0.10891945686274501 seconds - 1706630378.8453088. Average Iterations: 33291.09411764706
+Average Time on 255 elements with 2 parameters: 0.001841172941176471 seconds - 1706630549.5156887. Average Iterations: 2094.458823529412
+Average Time on 255 elements with 2 parameters: 0.0019581941176470587 seconds - 1706630553.7043126. Average Iterations: 2158.9450980392157
+Average Time on 255 elements with 3 parameters: 0.015838998039215683 seconds - 1706630588.6768205. Average Iterations: 6632.956862745098
