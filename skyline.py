@@ -19,7 +19,7 @@ class SkylineSort:
 
     def dominates(self, object, operators):
         global iterations
-        if len(operators):
+        if len(operators)==2:
             comp_1 = lt if operators[0] == SkylineType.MINSKYLINE else gt
             comp_1_ = le if operators[0] == SkylineType.MINSKYLINE else ge
             comp_2 = lt if operators[1] == SkylineType.MINSKYLINE else gt
@@ -117,12 +117,12 @@ if __name__ == '__main__':
     import random 
     import time
 
-    num_tests       = 0xFFFF
+    num_tests       = 0xFFF
     num_persons     = 0xFFF
     times = []
     total_iterations = []
-    skyline_params_test = ["age", "score", "random_val1", "random_val2", "random_val3", "random_val4"]
-    skyline_operators_test = [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE]
+    skyline_params_test = ["age", "score"]#, "random_val1", "random_val2", "random_val3", "random_val4"]
+    skyline_operators_test = [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE]#, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE]
     for t in range(0, num_tests):
         iterations = 0
         people = []

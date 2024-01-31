@@ -1,1 +1,3 @@
 Average Time on       4095 elements with          6 parameters: 0.03575688431525158 seconds - 1706644578.1705742. Average Iterations: 30738.92904554818
+Average Time on       4095 elements with          2 parameters: 0.030586563711843727 seconds - 1706650291.116826. Average Iterations: 30900.994871794872
+Average Time on       4095 elements with          2 parameters: 0.030846494896214976 seconds - 1706651148.4298978. Average Iterations: 30902.471306471307
