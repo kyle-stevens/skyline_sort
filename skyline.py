@@ -19,31 +19,6 @@ class SkylineSort:
 
     def dominates(self, object, operators):
         global iterations
-        if len(operators)==2:
-            comp_1 = lt if operators[0] == SkylineType.MINSKYLINE else gt
-            comp_1_ = le if operators[0] == SkylineType.MINSKYLINE else ge
-            comp_2 = lt if operators[1] == SkylineType.MINSKYLINE else gt
-            comp_2_ = le if operators[1] == SkylineType.MINSKYLINE else ge
-            
-            for obj in self.unsorted_objects:
-                iterations += 1
-                if obj == object:
-                    continue
-                if not (
-                    (
-                        comp_1_(self.skyline_getters[0](obj), self.skyline_getters[0](object)) and \
-                        comp_2_(self.skyline_getters[1](obj), self.skyline_getters[1](object))
-                    ) and \
-                    (
-                        comp_1(self.skyline_getters[0](obj), self.skyline_getters[0](object)) or \
-                        comp_2(self.skyline_getters[1](obj), self.skyline_getters[1](object))
-                    )
-                    ):
-                    continue
-                else:
-                    return False
-            return True
-        # Use less efficient version when you pass the 2 variable threshhold.
         as_good_as_checks = []
         better_than_checks = []
         for operator in operators:
@@ -121,8 +96,8 @@ if __name__ == '__main__':
     num_persons     = 0xFFF
     times = []
     total_iterations = []
-    skyline_params_test = ["age", "score"]#, "random_val1", "random_val2", "random_val3", "random_val4"]
-    skyline_operators_test = [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE]#, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE]
+    skyline_params_test = ["age", "score", "random_val1", "random_val2", "random_val3", "random_val4"]
+    skyline_operators_test = [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE]
     for t in range(0, num_tests):
         iterations = 0
         people = []
