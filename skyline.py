@@ -12,32 +12,32 @@ class SkylineType(Enum):
 
 class SkylineSort:
 
-    unsorted_objects : list = None
-    skyline_getters : list[str]
-    skyline_types : list[SkylineType]
-    skyline_objs : list = []
+    _data : list = None
+    _parameters : list[str]
+    _sort_orders : list[SkylineType]
+    _skyline : list = []
 
-    def _dominates(self, object, operators):
+    def _dominates(self, object, sort_orders):
         global iterations
         as_good_as_checks = []
         better_than_checks = []
-        for operator in operators:
+        for operator in sort_orders:
             better_than_checks.append(lt if operator == SkylineType.MINSKYLINE else gt)
             as_good_as_checks.append(le if operator == SkylineType.MINSKYLINE else ge)
         
-        for obj in self.unsorted_objects:
+        for obj in self._data:
             iterations += 1
             if obj == object:
                 continue
-            if not ( #needs reworks for this portion and larger arrays of getters.
+            if not (
                 (
                     all(
-                        [as_good_as_checks[it](self.skyline_getters[it](obj), self.skyline_getters[it](object)) for it in range(len(self.skyline_types))]
+                        [as_good_as_checks[it](self._parameters[it](obj), self._parameters[it](object)) for it in range(len(self._sort_orders))]
                     )
                 ) and \
                 (
                     any(
-                        [better_than_checks[it](self.skyline_getters[it](obj), self.skyline_getters[it](object)) for it in range(len(self.skyline_types))]
+                        [better_than_checks[it](self._parameters[it](obj), self._parameters[it](object)) for it in range(len(self._sort_orders))]
                     )
                 )
                 ):
@@ -47,35 +47,34 @@ class SkylineSort:
         return True
     
     def sort_skyline(self):
-        for obj in self.skyline_candidates:
-            if self._dominates(obj, self.skyline_types):
-                self.skyline_objs.append(obj)
+        for obj in self._data:
+            if self._dominates(obj, self._sort_orders):
+                self._skyline.append(obj)
 
     def __init__(
-        self, unsorted_objects : list, 
+        self, _data : list, 
         presort : bool, 
-        skyline_params : list[str], 
-        operators : list[SkylineType]
+        sort_parameters : list[str], 
+        sort_orders : list[SkylineType]
         ) -> None:
         if any(
             [
-                (len(skyline_params) < 2),
-                (len(operators) < 2),
-                len(operators) != len(skyline_params)
+                (len(sort_parameters) < 2),
+                (len(sort_orders) < 2),
+                len(sort_orders) != len(sort_parameters)
             ]
         ):
             raise RuntimeError(f'Error: Skyline sort failed. Please ensure that your arguments pass the minimum requirements.' + \
-                               f'\n\tSkyline Parameter count {len(skyline_params)}>=2.' + \
-                                f'\n\tSkyline Operators count {len(operators)}>=2' + \
-                                    f'\n\t{len(skyline_params)} == {len(operators)}')
+                               f'\n\tSkyline Parameter count {len(sort_parameters)}>=2.' + \
+                                f'\n\tSkyline sort_orders count {len(sort_orders)}>=2' + \
+                                    f'\n\t{len(sort_parameters)} == {len(sort_orders)}')
         
 
-        self.unsorted_objects = unsorted_objects
-        self.skyline_getters = [attrgetter(param) for param in skyline_params]
-        self.skyline_types = operators
+        self._data = _data
+        self._parameters = [attrgetter(param) for param in sort_parameters]
+        self._sort_orders = sort_orders
         if presort:
-            self.unsorted_objects.sort(key=self.skyline_getters[0], reverse= (self.skyline_types[0] == SkylineType.MAXSKYLINE))
-        self.skyline_candidates = self.unsorted_objects
+            self._data.sort(key=self._parameters[0], reverse= (self._sort_orders[0] == SkylineType.MAXSKYLINE))
 
         self.sort_skyline()
 
@@ -101,8 +100,8 @@ if __name__ == '__main__':
     num_persons     = 0xFF
     times = []
     total_iterations = []
-    skyline_params_test = ["age", "score", "random_val1", "random_val2", "random_val3", "random_val4"]
-    skyline_operators_test = [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE]
+    sort_parameters_test = ["age", "score", "random_val1", "random_val2", "random_val3", "random_val4"]
+    skyline_sort_orders_test = [SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MAXSKYLINE, SkylineType.MINSKYLINE, SkylineType.MAXSKYLINE]
     for t in range(0, num_tests):
         iterations = 0
         people = []
@@ -110,16 +109,16 @@ if __name__ == '__main__':
             people.append(Person(str(i), random.randint(0,100), random.randint(0,100), random.randint(0,100), random.randint(0,100), random.randint(0,100), random.randint(0,100)))
         start = time.time_ns()
         skyline = SkylineSort(
-            unsorted_objects=people, 
+            _data=people, 
             presort=True, 
-            skyline_params=skyline_params_test, 
-            operators=skyline_operators_test
+            sort_parameters=sort_parameters_test, 
+            sort_orders=skyline_sort_orders_test
             )
         end = time.time_ns()
         duration = (end - start) / (10 ** 9)
         times.append(duration)
         total_iterations.append(iterations)
         print(f'Iteration {t:10}/{num_tests} skyline sort on {num_persons:10}: {duration:15} seconds. Took {iterations:10} iterations to complete.')
-    dprint(f'Average Time on {num_persons:10} elements with {len(skyline_params_test):10} parameters: {(sum(times) / num_tests):15} seconds - {time.time()}. Average Iterations: {sum(total_iterations) / len(total_iterations)}')
+    dprint(f'Average Time on {num_persons:10} elements with {len(sort_parameters_test):10} parameters: {(sum(times) / num_tests):15} seconds - {time.time()}. Average Iterations: {sum(total_iterations) / len(total_iterations)}')
     
     
