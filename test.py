@@ -39,8 +39,8 @@ if __name__ == '__main__':
         end = time.time_ns()
         duration = (end - start) / (10 ** 9)
         times.append(duration)
-        total_iterations.append(iterations)
-        print(f'Iteration {t:10}/{num_tests} skyline sort on {num_persons:10}: {duration:15} seconds. Took {iterations:10} iterations to complete.')
-    dprint(f'Average Time on {num_persons:10} elements with {len(sort_parameters_test):10} parameters: {(sum(times) / num_tests):15} seconds - {time.time()}. Average Iterations: {sum(total_iterations) / len(total_iterations)}')
+        
+        print(f'Iteration {t:10}/{num_tests} skyline sort on {num_persons:10}: {duration:15} seconds.')
+    dprint(f'Average Time on {num_persons:10} elements with {len(sort_parameters_test):10} parameters: {(sum(times) / num_tests):15} seconds - {time.time()}.')
     
     

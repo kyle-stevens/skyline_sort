@@ -2,10 +2,6 @@ from operator import attrgetter, lt, gt, le, ge
 
 from enum import Enum
 
-import matplotlib.pyplot as plt
-
-iterations = 0
-
 class SkylineType(Enum):
     MAXSKYLINE = 1
     MINSKYLINE = 2
@@ -18,7 +14,6 @@ class SkylineSort:
     _skyline : list = []
 
     def _dominates(self, object, sort_orders):
-        global iterations
         as_good_as_checks = []
         better_than_checks = []
         for operator in sort_orders:
@@ -26,7 +21,6 @@ class SkylineSort:
             as_good_as_checks.append(le if operator == SkylineType.MINSKYLINE else ge)
         
         for obj in self._data:
-            iterations += 1
             if obj == object:
                 continue
             if not (
