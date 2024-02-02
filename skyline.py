@@ -17,7 +17,7 @@ class SkylineSort:
     skyline_types : list[SkylineType]
     skyline_objs : list = []
 
-    def dominates(self, object, operators):
+    def _dominates(self, object, operators):
         global iterations
         as_good_as_checks = []
         better_than_checks = []
@@ -48,7 +48,7 @@ class SkylineSort:
     
     def sort_skyline(self):
         for obj in self.skyline_candidates:
-            if self.dominates(obj, self.skyline_types):
+            if self._dominates(obj, self.skyline_types):
                 self.skyline_objs.append(obj)
 
     def __init__(
@@ -57,12 +57,17 @@ class SkylineSort:
         skyline_params : list[str], 
         operators : list[SkylineType]
         ) -> None:
-        if len(skyline_params) < 2:
-            raise RuntimeError("Must perform skyline on at least 2 parameters")
-        if len(operators) < 2:
-            raise RuntimeError("Must perform skyline with at least 2 operators")
-        if len(operators) != len(skyline_params):
-            raise RuntimeError("Number of parameters and number of skyline types must be equal.")
+        if any(
+            [
+                (len(skyline_params) < 2),
+                (len(operators) < 2),
+                len(operators) != len(skyline_params)
+            ]
+        ):
+            raise RuntimeError(f'Error: Skyline sort failed. Please ensure that your arguments pass the minimum requirements.' + \
+                               f'\n\tSkyline Parameter count {len(skyline_params)}>=2.' + \
+                                f'\n\tSkyline Operators count {len(operators)}>=2' + \
+                                    f'\n\t{len(skyline_params)} == {len(operators)}')
         
 
         self.unsorted_objects = unsorted_objects
@@ -93,7 +98,7 @@ if __name__ == '__main__':
     import time
 
     num_tests       = 0xFFF
-    num_persons     = 0xFFF
+    num_persons     = 0xFF
     times = []
     total_iterations = []
     skyline_params_test = ["age", "score", "random_val1", "random_val2", "random_val3", "random_val4"]
